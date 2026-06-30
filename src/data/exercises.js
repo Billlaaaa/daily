@@ -16,8 +16,8 @@ export const gymExercises = {
     'Lat Pulldown',
     'T-Bar Supported Row',
     'Chest Supported Row',
+    'Reverse Pec Dec',
     'Zigzag Bar Close Grip Curls',
-    'Dumbbell Curls',
     'Preacher Curls',
   ],
   Legs: [

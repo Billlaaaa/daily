@@ -283,6 +283,15 @@ const INSTRUCTIONS = {
     ],
     tip: 'Chest stays on the pad — no jerking or body english.',
   },
+  'Reverse Pec Dec': {
+    steps: [
+      'Sit facing the pec-deck pad, chest against it, and grab the handles with arms out in front.',
+      'Set the handles to about shoulder height; keep a slight bend in the elbows.',
+      'Squeeze your shoulder blades and sweep the handles out and back in a wide arc.',
+      'Pause at the back, then return slowly under control.',
+    ],
+    tip: 'Lead with the elbows and keep the work in the rear delts — don’t shrug.',
+  },
   'Zigzag Bar Close Grip Curls': {
     steps: [
       'Hold the EZ (zigzag) bar on the inner grips, palms up.',
