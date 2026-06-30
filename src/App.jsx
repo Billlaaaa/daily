@@ -45,7 +45,7 @@ function SetupModal({ onComplete }) {
             style={{ width: '100%', padding: '10px 12px', fontSize: 14, fontFamily: 'var(--font-mono)', colorScheme: 'dark' }} />
         </div>
 
-        <button onClick={handleSave} style={{ width: '100%', padding: '12px 0', background: 'var(--accent)', color: 'white', fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 15, borderRadius: 6, letterSpacing: '0.04em', cursor: 'pointer' }}>
+        <button className="btn-primary" onClick={handleSave} style={{ width: '100%', padding: '12px 0', fontSize: 15, letterSpacing: '0.04em' }}>
           LAUNCH MISSION
         </button>
       </div>

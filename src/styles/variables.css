@@ -3,8 +3,10 @@
   --bg-elevated: #0F0F15;
   --surface: #131319;
   --surface-2: #191922;
+  --surface-3: #1E1E2A;
   --border: #232330;
   --border-soft: #1A1A22;
+  --border-hover: rgba(255, 255, 255, 0.12);
   --accent: #FF4D00;
   --accent-2: #FF8A3D;
   --accent-soft: rgba(255, 77, 0, 0.12);

@@ -4,6 +4,16 @@ import { gymExercises, gymStretches, REHAB_EXERCISES } from '../../data/exercise
 import { getLastSessionDate } from '../../hooks/useGymCycle'
 import { lsGet, lsSet } from '../../hooks/useLocalStorage'
 
+// Progressive overload nudge: if last session hit 10+ reps at a weight, suggest a small bump; otherwise repeat it.
+function suggestNextWeight(prevSet) {
+  if (!prevSet?.weight) return null
+  const w = parseFloat(prevSet.weight)
+  const r = parseFloat(prevSet.reps)
+  if (Number.isNaN(w)) return null
+  if (!Number.isNaN(r) && r >= 10) return Math.round((w + 2.5) * 2) / 2
+  return w
+}
+
 function ExerciseCard({ name, today, lastDate, isRehab }) {
   const gymKey = `gym_${today}_${name}`
   const [sets, setSets] = useState(() =>
@@ -55,9 +65,26 @@ function ExerciseCard({ name, today, lastDate, isRehab }) {
             </span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
               <input type="number" min="0" className="set-input" placeholder="kg" value={set.weight} onChange={(e) => updateSet(idx, 'weight', e.target.value)} />
-              {prevSets[idx]?.weight && (
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--muted)' }}>({prevSets[idx].weight})</span>
-              )}
+              {(() => {
+                const suggested = suggestNextWeight(prevSets[idx])
+                if (set.weight !== '' || suggested == null) return null
+                const isBump = parseFloat(prevSets[idx].weight) !== suggested
+                return (
+                  <button
+                    onClick={() => updateSet(idx, 'weight', suggested)}
+                    title={isBump ? 'Last session hit 10+ reps — suggested progression' : 'Same as last session'}
+                    style={{
+                      fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 600,
+                      color: isBump ? 'var(--green)' : 'var(--muted)',
+                      background: isBump ? 'rgba(0,230,118,0.12)' : 'var(--surface-2)',
+                      border: `1px solid ${isBump ? 'var(--green)' : 'var(--border)'}`,
+                      borderRadius: 4, padding: '2px 6px', whiteSpace: 'nowrap', cursor: 'pointer',
+                    }}
+                  >
+                    {isBump ? '↑' : '→'} {suggested}
+                  </button>
+                )
+              })()}
             </div>
             <span style={{ color: 'var(--muted)', fontSize: 12 }}>×</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>

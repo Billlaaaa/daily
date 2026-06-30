@@ -26,7 +26,7 @@ export default function ListEditor({ items, fields, onChange, idPrefix, makeDefa
     <div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {items.map((item, idx) => (
-          <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', background: 'var(--surface-2)', borderRadius: 'var(--radius-sm)', padding: 8 }}>
+          <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', background: 'var(--surface-3)', borderRadius: 'var(--radius-sm)', padding: 8 }}>
             {fields.map((f) => (
               f.type === 'select' ? (
                 <select

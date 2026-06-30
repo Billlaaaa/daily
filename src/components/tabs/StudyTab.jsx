@@ -89,17 +89,9 @@ export default function StudyTab() {
 
               {!done && (
                 <button
+                  className="btn-primary"
                   onClick={() => setActiveBlock(block)}
-                  style={{
-                    padding: '8px 0',
-                    background: 'var(--accent)',
-                    color: 'white',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 700,
-                    fontSize: 13,
-                    borderRadius: 5,
-                    letterSpacing: '0.04em',
-                  }}
+                  style={{ padding: '8px 0', fontSize: 13, letterSpacing: '0.04em' }}
                 >
                   START
                 </button>

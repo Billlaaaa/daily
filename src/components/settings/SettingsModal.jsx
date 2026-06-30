@@ -101,11 +101,11 @@ export default function SettingsModal({ onClose }) {
             <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 16 }}>
               Your data lives only in this browser. Export a backup before clearing site data or switching devices.
             </p>
-            <button onClick={downloadBackup} style={{ width: '100%', padding: '12px 0', background: 'var(--accent)', color: 'white', fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 14, borderRadius: 8, cursor: 'pointer', marginBottom: 12 }}>
+            <button className="btn-primary" onClick={downloadBackup} style={{ width: '100%', padding: '12px 0', fontSize: 14, marginBottom: 12 }}>
               Export backup (.json)
             </button>
             <input ref={fileInputRef} type="file" accept="application/json" onChange={handleImportFile} style={{ display: 'none' }} />
-            <button onClick={() => fileInputRef.current?.click()} style={{ width: '100%', padding: '12px 0', background: 'var(--surface-2)', border: '1px solid var(--border)', color: 'var(--text)', fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 14, borderRadius: 8, cursor: 'pointer' }}>
+            <button className="btn-secondary" onClick={() => fileInputRef.current?.click()} style={{ width: '100%', padding: '12px 0', fontSize: 14 }}>
               Import backup…
             </button>
             {importMsg && <p style={{ fontSize: 12, color: importMsg.startsWith('Import failed') ? '#FF4444' : 'var(--green)', marginTop: 10 }}>{importMsg}</p>}
@@ -203,10 +203,10 @@ export default function SettingsModal({ onClose }) {
 
         {tab !== 'Backup' && (
           <div style={{ display: 'flex', gap: 10, marginTop: 26 }}>
-            <button onClick={resetAllDefaults} style={{ padding: '12px 16px', background: 'transparent', border: '1px solid var(--border)', color: 'var(--muted)', fontFamily: 'var(--font-heading)', fontWeight: 600, fontSize: 13, borderRadius: 8, cursor: 'pointer' }}>
+            <button className="btn-secondary" onClick={resetAllDefaults} style={{ padding: '12px 16px', fontSize: 13, color: 'var(--muted)' }}>
               Reset all
             </button>
-            <button onClick={saveAndReload} style={{ flex: 1, padding: '12px 0', background: 'var(--accent)', color: 'white', fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 14, borderRadius: 8, cursor: 'pointer' }}>
+            <button className="btn-primary" onClick={saveAndReload} style={{ flex: 1, padding: '12px 0', fontSize: 14 }}>
               Save & reload
             </button>
           </div>

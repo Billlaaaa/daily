@@ -13,7 +13,7 @@ export const dailyItems = [
 
 export const categoryColors = {
   study:     '#FF4D00',
-  daily:     '#444444',
+  daily:     '#5C5C6B',
   nutrition: '#FFB800',
   gym:       '#00E676',
   stretch:   '#A855F7',
