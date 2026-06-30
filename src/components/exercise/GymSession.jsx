@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import { gymExercises, gymStretches, REHAB_EXERCISES } from '../../data/exercises'
 import { getLastSessionDate } from '../../hooks/useGymCycle'
 import { lsGet, lsSet } from '../../hooks/useLocalStorage'
+import MovementInfoModal, { InfoButton } from './MovementInfoModal'
 
 // Progressive overload nudge: if last session hit 10+ reps at a weight, suggest a small bump; otherwise repeat it.
 function suggestNextWeight(prevSet) {
@@ -14,7 +15,7 @@ function suggestNextWeight(prevSet) {
   return w
 }
 
-function ExerciseCard({ name, today, lastDate, isRehab }) {
+function ExerciseCard({ name, today, lastDate, isRehab, onInfo }) {
   const gymKey = `gym_${today}_${name}`
   const [sets, setSets] = useState(() =>
     lsGet(gymKey, [{ weight: '', reps: '', done: false }, { weight: '', reps: '', done: false }, { weight: '', reps: '', done: false }])
@@ -44,8 +45,11 @@ function ExerciseCard({ name, today, lastDate, isRehab }) {
   return (
     <div className="panel" style={{ borderLeft: isRehab ? '3px solid #FF3333' : '3px solid var(--green)' }}>
       <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
-        <div>
-          <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 15, color: 'var(--text)' }}>{name}</div>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div onClick={() => onInfo(name)} style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 15, color: 'var(--text)', cursor: 'pointer' }}>{name}</div>
+            <InfoButton onClick={() => onInfo(name)} color="var(--green)" />
+          </div>
           {isRehab && (
             <div style={{ fontSize: 11, color: '#FF3333', fontWeight: 600, marginTop: 4, letterSpacing: '0.04em' }}>
               LIGHT WEIGHT ONLY — NO ADDED PLATES — REHAB MOVEMENT
@@ -138,6 +142,7 @@ function CardioCard({ today }) {
 export default function GymSession({ split }) {
   const today = dayjs().format('YYYY-MM-DD')
   const [stretchOpen, setStretchOpen] = useState(false)
+  const [info, setInfo] = useState(null)
 
   const exercises = gymExercises[split] || []
   const stretches = gymStretches[split] || []
@@ -177,8 +182,9 @@ export default function GymSession({ split }) {
             {stretches.map((s, i) => (
               <div key={i} className="list-row" style={{ padding: '10px 14px' }}>
                 <span className="row-dot" style={{ background: 'var(--purple)' }} />
-                <span style={{ flex: 1, minWidth: 0, fontSize: 13, color: 'var(--text)' }}>{s.name}</span>
+                <span onClick={() => setInfo({ name: s.name, prescription: s.prescription, accent: 'var(--purple)' })} style={{ flex: 1, minWidth: 0, fontSize: 13, color: 'var(--text)', cursor: 'pointer' }}>{s.name}</span>
                 <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-mono)' }}>{s.prescription}</span>
+                <InfoButton onClick={() => setInfo({ name: s.name, prescription: s.prescription, accent: 'var(--purple)' })} color="var(--purple)" />
               </div>
             ))}
           </div>
@@ -188,7 +194,14 @@ export default function GymSession({ split }) {
       {/* Exercises */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         {exercises.map((name) => (
-          <ExerciseCard key={name} name={name} today={today} lastDate={lastDate} isRehab={REHAB_EXERCISES.includes(name)} />
+          <ExerciseCard
+            key={name}
+            name={name}
+            today={today}
+            lastDate={lastDate}
+            isRehab={REHAB_EXERCISES.includes(name)}
+            onInfo={(n) => setInfo({ name: n, accent: 'var(--green)' })}
+          />
         ))}
       </div>
 
@@ -196,6 +209,10 @@ export default function GymSession({ split }) {
         <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'right' }}>
           Previous session: {lastDate}
         </div>
+      )}
+
+      {info && (
+        <MovementInfoModal name={info.name} prescription={info.prescription} accent={info.accent} onClose={() => setInfo(null)} />
       )}
     </div>
   )

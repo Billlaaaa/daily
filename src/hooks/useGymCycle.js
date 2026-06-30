@@ -1,11 +1,11 @@
 import dayjs from 'dayjs'
-import { GYM_CYCLE, CYCLE_START_DATE, gymExercises } from '../data/exercises'
+import { GYM_CYCLE, gymExercises } from '../data/exercises'
 import { lsGet } from './useLocalStorage'
 
 export function getGymSession(date) {
-  const cycleStart = lsGet('cycleStartDate', CYCLE_START_DATE)
-  const dayIndex = dayjs(date).diff(dayjs(cycleStart), 'day')
-  return GYM_CYCLE[((dayIndex % 7) + 7) % 7]
+  // Weekly split anchored to the day of week: Mon=Push … Sun=Rest
+  const dow = (dayjs(date).day() + 6) % 7 // 0 = Monday
+  return GYM_CYCLE[dow]
 }
 
 export function useGymCycle(date) {

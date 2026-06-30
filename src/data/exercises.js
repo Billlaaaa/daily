@@ -1,5 +1,5 @@
+// Weekly split by weekday — index 0 = Monday … index 6 = Sunday
 export const GYM_CYCLE = ['Push', 'Pull', 'Cardio', 'Push', 'Pull', 'Legs', 'Rest']
-export const CYCLE_START_DATE = '2026-07-01'
 
 export const gymExercises = {
   Push: [

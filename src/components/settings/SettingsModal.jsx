@@ -31,7 +31,6 @@ export default function SettingsModal({ onClose }) {
   const [supplementItems, setSupplementItems] = useState(getSupplementItems)
   const [macroTargets, setMacroTargets] = useState(getMacroTargets)
   const [goalWeight, setGoalWeight] = useState(() => String(lsGet('goalWeight', 90)))
-  const [cycleStart, setCycleStart] = useState(() => lsGet('cycleStartDate', '2026-07-01'))
 
   const handleImportFile = async (e) => {
     const file = e.target.files?.[0]
@@ -54,7 +53,6 @@ export default function SettingsModal({ onClose }) {
     savePlanData('supplementItems', supplementItems)
     savePlanData('macroTargets', { protein: Number(macroTargets.protein), carbs: Number(macroTargets.carbs), fat: Number(macroTargets.fat) })
     lsSet('goalWeight', parseFloat(goalWeight) || 90)
-    lsSet('cycleStartDate', cycleStart)
     window.location.reload()
   }
 
@@ -187,17 +185,16 @@ export default function SettingsModal({ onClose }) {
               </label>
             </div>
 
-            <SectionHeading>Body & Cycle</SectionHeading>
+            <SectionHeading>Body</SectionHeading>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
               <label style={{ flex: 1, minWidth: 120 }}>
                 <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>Goal weight (kg)</div>
                 <input type="number" value={goalWeight} onChange={(e) => setGoalWeight(e.target.value)} style={{ width: '100%', padding: '8px 10px', fontFamily: 'var(--font-mono)' }} />
               </label>
-              <label style={{ flex: 1, minWidth: 150 }}>
-                <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>Gym cycle start date</div>
-                <input type="date" value={cycleStart} onChange={(e) => setCycleStart(e.target.value)} style={{ width: '100%', padding: '8px 10px', fontFamily: 'var(--font-mono)', colorScheme: 'dark' }} />
-              </label>
             </div>
+            <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 14 }}>
+              Gym split follows the day of the week — Mon Push · Tue Pull · Wed Cardio · Thu Push · Fri Pull · Sat Legs · Sun Rest.
+            </p>
           </div>
         )}
 

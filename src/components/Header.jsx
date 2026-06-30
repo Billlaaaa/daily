@@ -60,7 +60,7 @@ export default function Header() {
   const todayStr = now.format('YYYY-MM-DD')
   const session = useGymCycle(todayStr)
 
-  const dayNum = Math.max(1, Math.min(TOTAL_PLAN_DAYS, dayjs(todayStr).diff(dayjs(PLAN_START_DATE), 'day') + 1))
+  const dayNum = Math.max(0, Math.min(TOTAL_PLAN_DAYS, dayjs(todayStr).diff(dayjs(PLAN_START_DATE), 'day') + 1))
   const daysRemaining = dayjs(EXAM_DATE).diff(now, 'day')
 
   return (

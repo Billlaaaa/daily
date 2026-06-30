@@ -14,11 +14,9 @@ import DashboardTab from './components/tabs/DashboardTab'
 
 function SetupModal({ onComplete }) {
   const [goalWeight, setGoalWeight] = useState('90')
-  const [cycleStart, setCycleStart] = useState('2026-07-01')
 
   const handleSave = () => {
     lsSet('goalWeight', parseFloat(goalWeight) || 90)
-    lsSet('cycleStartDate', cycleStart)
     lsSet('setupDone', true)
     onComplete()
   }
@@ -35,14 +33,6 @@ function SetupModal({ onComplete }) {
           </label>
           <input type="number" min="0" value={goalWeight} onChange={(e) => setGoalWeight(e.target.value)}
             style={{ width: '100%', padding: '10px 12px', fontSize: 16, fontFamily: 'var(--font-mono)' }} />
-        </div>
-
-        <div style={{ marginBottom: 32 }}>
-          <label style={{ display: 'block', fontSize: 12, color: 'var(--muted)', marginBottom: 6, fontFamily: 'var(--font-heading)', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-            Cycle Start Date
-          </label>
-          <input type="date" value={cycleStart} onChange={(e) => setCycleStart(e.target.value)}
-            style={{ width: '100%', padding: '10px 12px', fontSize: 14, fontFamily: 'var(--font-mono)', colorScheme: 'dark' }} />
         </div>
 
         <button className="btn-primary" onClick={handleSave} style={{ width: '100%', padding: '12px 0', fontSize: 15, letterSpacing: '0.04em' }}>

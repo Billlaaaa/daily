@@ -15,7 +15,7 @@ const BLOCK_HOURS = 50 / 60
 
 export default function DashboardTab() {
   const today = dayjs().format('YYYY-MM-DD')
-  const dayNum = Math.max(1, Math.min(TOTAL_DAYS, dayjs(today).diff(dayjs(PLAN_START), 'day') + 1))
+  const dayNum = Math.max(0, Math.min(TOTAL_DAYS, dayjs(today).diff(dayjs(PLAN_START), 'day') + 1))
   const daysRemaining = dayjs(EXAM_DATE).diff(today, 'day')
   const currentWeight = lsGet(`weight_${today}`, null)
 
