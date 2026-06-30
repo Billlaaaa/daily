@@ -40,12 +40,17 @@ export default function DashboardTab() {
     <div className="tab-content">
       <TodaySummaryCard />
 
-      {/* Header stat row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, marginBottom: 24 }}>
-        {metrics.map(m => (
-          <div key={m.label} className="card" style={{ textAlign: 'center' }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 26, fontWeight: 700, color: m.color }}>{m.value}</div>
-            <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4, fontFamily: 'var(--font-heading)', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{m.label}</div>
+      {/* Header stat strip — one flat panel, hairline-divided quadrants */}
+      <div className="panel" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', padding: 0, overflow: 'hidden', marginBottom: 24 }}>
+        {metrics.map((m, i) => (
+          <div key={m.label} style={{
+            textAlign: 'center',
+            padding: '16px 8px',
+            borderRight: i % 2 === 0 ? '1px solid var(--border-soft)' : 'none',
+            borderBottom: i < 2 ? '1px solid var(--border-soft)' : 'none',
+          }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 24, fontWeight: 700, color: m.color }}>{m.value}</div>
+            <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4, fontFamily: 'var(--font-heading)', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{m.label}</div>
           </div>
         ))}
       </div>

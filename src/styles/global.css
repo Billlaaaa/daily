@@ -293,8 +293,8 @@ input[type='number'] {
   padding: 4px 4px;
 }
 
-/* Study tab — schedule timeline */
-.study-row {
+/* Flat list row — lighter, shared alternative to .card for repeated items */
+.list-row {
   position: relative;
   display: flex;
   align-items: center;
@@ -306,59 +306,65 @@ input[type='number'] {
   transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, opacity 0.2s ease;
 }
 
-.study-row.is-featured {
+.list-row.is-featured {
   border-color: var(--accent);
   box-shadow: 0 0 0 1px var(--accent-soft), 0 8px 26px rgba(255, 77, 0, 0.18);
 }
 
-.study-row.is-done {
+.list-row.is-done {
   opacity: 0.62;
 }
 
-.study-rail {
+/* Timeline rail + connector dots (used by Study & Daily) */
+.tl-item {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.tl-rail {
   position: relative;
   width: 14px;
   flex-shrink: 0;
-  align-self: stretch;
   display: flex;
   justify-content: center;
 }
 
-/* connector line between dots */
-.study-rail::before {
+.tl-rail::before {
   content: '';
   position: absolute;
-  top: -12px;
-  bottom: -12px;
+  top: -8px;
+  bottom: -8px;
   left: 50%;
   width: 2px;
   transform: translateX(-50%);
   background: var(--border);
 }
-.study-item:first-child .study-rail::before { top: 50%; }
-.study-item:last-child .study-rail::before { bottom: 50%; }
+.tl-item:first-child .tl-rail::before { top: 50%; }
+.tl-item:last-child .tl-rail::before { bottom: 50%; }
 
-.study-dot {
+.tl-dot {
   position: relative;
   z-index: 1;
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  margin-top: 4px;
+  margin-top: 16px;
   background: var(--surface);
   border: 2px solid var(--border);
   flex-shrink: 0;
 }
-.study-dot.dot-done { background: var(--green); border-color: var(--green); }
-.study-dot.dot-now  { background: var(--accent); border-color: var(--accent); animation: study-pulse 1.8s ease-in-out infinite; }
-.study-dot.dot-next { background: transparent; border-color: var(--accent); }
+.tl-dot.dot-done { background: var(--green); border-color: var(--green); }
+.tl-dot.dot-now  { background: var(--accent); border-color: var(--accent); animation: tl-pulse 1.8s ease-in-out infinite; }
+.tl-dot.dot-next { background: transparent; border-color: var(--accent); }
 
-@keyframes study-pulse {
+@keyframes tl-pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(255, 77, 0, 0.55); }
   50%      { box-shadow: 0 0 0 7px rgba(255, 77, 0, 0); }
 }
 
-.study-start-ghost {
+.row-start-ghost {
   font-family: var(--font-heading);
   font-weight: 700;
   font-size: 11px;
@@ -370,7 +376,23 @@ input[type='number'] {
   padding: 6px 12px;
   white-space: nowrap;
 }
-.study-start-ghost:hover { border-color: var(--accent); }
+.row-start-ghost:hover { border-color: var(--accent); }
+
+/* Small status dot for non-timeline lists (nutrition, stretches) */
+.row-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Flat panel — column-layout container, lighter than .card (gym exercises) */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
 
 /* Confetti */
 .confetti-piece {

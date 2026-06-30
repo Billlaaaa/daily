@@ -39,8 +39,9 @@ export default function NightStretches() {
           const isDone = !!checked[s.id]
           return (
             <SwipeableRow key={s.id} done={isDone} onComplete={() => toggle(s.id)}>
-              <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 14, borderLeft: '3px solid var(--sky)', opacity: isDone ? 0.55 : 1 }}>
-                <div style={{ flex: 1 }}>
+              <div className={`list-row${isDone ? ' is-done' : ''}`}>
+                <span className="row-dot" style={{ background: 'var(--sky)' }} />
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontWeight: 500, fontSize: 14, color: isDone ? 'var(--muted)' : 'var(--text)', textDecoration: isDone ? 'line-through' : 'none' }}>
                     {s.name}
                   </div>

@@ -46,71 +46,69 @@ export default function DailyTab() {
         </div>
       </div>
 
+      <div className="progress-bar" style={{ height: 5, marginBottom: 18 }}>
+        <div className="progress-fill" style={{ width: `${dailyItems.length ? (completedCount / dailyItems.length) * 100 : 0}%`, background: allDone ? 'var(--green)' : 'var(--accent)' }} />
+      </div>
+
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {dailyItems.map((item) => {
           const done = !!checked[item.id]
           const color = categoryColors[item.category] || 'var(--border)'
           return (
-            <SwipeableRow key={item.id} done={done} onComplete={() => toggle(item.id)}>
-              <div
-                className="card"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 14,
-                  borderLeft: `3px solid ${color}`,
-                  opacity: done ? 0.55 : 1,
-                  transition: 'opacity 0.2s ease',
-                }}
-              >
-                <div style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 11,
-                  color: 'var(--muted)',
-                  minWidth: 60,
-                  whiteSpace: 'nowrap',
-                }}>
-                  {item.time}
-                </div>
-
-                <div style={{ flex: 1 }}>
-                  <div style={{
-                    fontSize: 14,
-                    color: done ? 'var(--muted)' : 'var(--text)',
-                    textDecoration: done ? 'line-through' : 'none',
-                    fontWeight: done ? 400 : 500,
-                  }}>
-                    {item.label}
-                  </div>
-                  <div style={{
-                    fontSize: 11,
-                    marginTop: 1,
-                    color: color,
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 600,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                  }}>
-                    {item.category}
-                  </div>
-                </div>
-
-                <input
-                  type="checkbox"
-                  className="checkbox"
-                  checked={done}
-                  onChange={() => toggle(item.id)}
+            <div key={item.id} className="tl-item">
+              <div className="tl-rail">
+                <span
+                  className={`tl-dot${done ? ' dot-done' : ''}`}
+                  style={done ? undefined : { borderColor: color, background: 'transparent' }}
                 />
               </div>
-            </SwipeableRow>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <SwipeableRow done={done} onComplete={() => toggle(item.id)}>
+                  <div className={`list-row${done ? ' is-done' : ''}`}>
+                    <div style={{
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: 11,
+                      color: 'var(--muted)',
+                      minWidth: 56,
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {item.time}
+                    </div>
+
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{
+                        fontSize: 14,
+                        color: done ? 'var(--muted)' : 'var(--text)',
+                        textDecoration: done ? 'line-through' : 'none',
+                        fontWeight: done ? 400 : 500,
+                      }}>
+                        {item.label}
+                      </div>
+                      <div style={{
+                        fontSize: 10,
+                        marginTop: 2,
+                        color: color,
+                        fontFamily: 'var(--font-heading)',
+                        fontWeight: 700,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                      }}>
+                        {item.category}
+                      </div>
+                    </div>
+
+                    <input
+                      type="checkbox"
+                      className="checkbox"
+                      checked={done}
+                      onChange={() => toggle(item.id)}
+                    />
+                  </div>
+                </SwipeableRow>
+              </div>
+            </div>
           )
         })}
-      </div>
-
-      <div style={{ marginTop: 20 }}>
-        <div className="progress-bar" style={{ height: 6 }}>
-          <div className="progress-fill" style={{ width: `${(completedCount / dailyItems.length) * 100}%`, background: 'var(--muted)' }} />
-        </div>
       </div>
     </div>
   )

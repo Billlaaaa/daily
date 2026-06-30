@@ -42,7 +42,7 @@ function ExerciseCard({ name, today, lastDate, isRehab }) {
   const setsDone = sets.filter(s => s.done).length
 
   return (
-    <div className="card" style={{ borderLeft: isRehab ? '3px solid #FF3333' : '3px solid var(--green)' }}>
+    <div className="panel" style={{ borderLeft: isRehab ? '3px solid #FF3333' : '3px solid var(--green)' }}>
       <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
         <div>
           <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 15, color: 'var(--text)' }}>{name}</div>
@@ -125,7 +125,7 @@ function CardioCard({ today }) {
   }
 
   return (
-    <div className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, borderLeft: '3px solid var(--amber)' }}>
+    <div className="panel" style={{ display: 'flex', alignItems: 'center', gap: 16, borderLeft: '3px solid var(--amber)' }}>
       <div style={{ flex: 1 }}>
         <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 15, color: 'var(--text)' }}>Treadmill</div>
         <div style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>90 minutes · 5 km/h · 5% incline</div>
@@ -145,7 +145,7 @@ export default function GymSession({ split }) {
 
   if (split === 'Rest') {
     return (
-      <div className="card" style={{ textAlign: 'center', padding: 40, borderLeft: '3px solid var(--purple)' }}>
+      <div className="panel" style={{ textAlign: 'center', padding: 40, borderLeft: '3px solid var(--purple)' }}>
         <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 20, color: 'var(--purple)', marginBottom: 8 }}>Rest Day</div>
         <div style={{ color: 'var(--muted)', fontSize: 14 }}>Recovery is part of the plan.</div>
       </div>
@@ -175,8 +175,9 @@ export default function GymSession({ split }) {
         {stretchOpen && (
           <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
             {stretches.map((s, i) => (
-              <div key={i} className="card" style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 14px', borderLeft: '3px solid var(--purple)' }}>
-                <span style={{ fontSize: 13, color: 'var(--text)' }}>{s.name}</span>
+              <div key={i} className="list-row" style={{ padding: '10px 14px' }}>
+                <span className="row-dot" style={{ background: 'var(--purple)' }} />
+                <span style={{ flex: 1, minWidth: 0, fontSize: 13, color: 'var(--text)' }}>{s.name}</span>
                 <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-mono)' }}>{s.prescription}</span>
               </div>
             ))}

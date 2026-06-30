@@ -165,12 +165,11 @@ export default function StudyTab() {
           else if (phase === 'past') sub = 'Earlier today'
 
           return (
-            <div key={block.id} className="study-item">
-              <div className={`study-row${isFeatured ? ' is-featured' : ''}${done ? ' is-done' : ''}`}>
-                <div className="study-rail">
-                  <span className={`study-dot ${dotClass}`} />
-                </div>
-
+            <div key={block.id} className="tl-item">
+              <div className="tl-rail">
+                <span className={`tl-dot ${dotClass}`} />
+              </div>
+              <div className={`list-row${isFeatured ? ' is-featured' : ''}${done ? ' is-done' : ''}`} style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: phase === 'now' ? 'var(--accent)' : 'var(--muted)', minWidth: 58, whiteSpace: 'nowrap', fontWeight: phase === 'now' ? 700 : 400 }}>
                   {block.time}
                 </div>
@@ -207,7 +206,7 @@ export default function StudyTab() {
                 </div>
 
                 {!isFeatured && !done && (
-                  <button className="study-start-ghost" onClick={() => setActiveBlock(block)}>
+                  <button className="row-start-ghost" onClick={() => setActiveBlock(block)}>
                     START
                   </button>
                 )}

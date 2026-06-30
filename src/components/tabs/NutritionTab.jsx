@@ -119,21 +119,12 @@ export default function NutritionTab() {
             const done = !!nutChecked[item.id]
             return (
               <SwipeableRow key={item.id} done={done} onComplete={() => toggleNut(item.id)}>
-                <div
-                  className="card"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 14,
-                    borderLeft: '3px solid var(--amber)',
-                    opacity: done ? 0.55 : 1,
-                    transition: 'opacity 0.2s ease',
-                  }}
-                >
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)', minWidth: 60, whiteSpace: 'nowrap' }}>
+                <div className={`list-row${done ? ' is-done' : ''}`}>
+                  <span className="row-dot" style={{ background: 'var(--amber)' }} />
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)', minWidth: 56, whiteSpace: 'nowrap' }}>
                     {item.time}
                   </div>
-                  <div style={{ flex: 1 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 14, color: done ? 'var(--muted)' : 'var(--text)', textDecoration: done ? 'line-through' : 'none', fontWeight: 500 }}>
                       {item.label}
                     </div>
@@ -165,21 +156,12 @@ export default function NutritionTab() {
             const done = !!supChecked[item.id]
             return (
               <SwipeableRow key={item.id} done={done} onComplete={() => toggleSup(item.id)}>
-                <div
-                  className="card"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 14,
-                    borderLeft: '3px solid var(--purple)',
-                    opacity: done ? 0.55 : 1,
-                    transition: 'opacity 0.2s ease',
-                  }}
-                >
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)', minWidth: 60, whiteSpace: 'nowrap' }}>
+                <div className={`list-row${done ? ' is-done' : ''}`}>
+                  <span className="row-dot" style={{ background: 'var(--purple)' }} />
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)', minWidth: 56, whiteSpace: 'nowrap' }}>
                     {item.time}
                   </div>
-                  <div style={{ flex: 1, fontSize: 14, color: done ? 'var(--muted)' : 'var(--text)', textDecoration: done ? 'line-through' : 'none', fontWeight: 500 }}>
+                  <div style={{ flex: 1, minWidth: 0, fontSize: 14, color: done ? 'var(--muted)' : 'var(--text)', textDecoration: done ? 'line-through' : 'none', fontWeight: 500 }}>
                     {item.label}
                   </div>
                   <input
