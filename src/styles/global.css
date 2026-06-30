@@ -394,6 +394,21 @@ input[type='number'] {
   padding: 14px;
 }
 
+/* Inline how-to reveal that opens under a stretch / exercise */
+.steps-reveal {
+  margin-top: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  animation: steps-open 0.22s ease;
+}
+
+@keyframes steps-open {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* Confetti */
 .confetti-piece {
   position: fixed;

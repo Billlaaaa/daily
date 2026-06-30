@@ -3,13 +3,13 @@ import dayjs from 'dayjs'
 import { nightStretches } from '../../data/stretches'
 import { lsGet, lsSet } from '../../hooks/useLocalStorage'
 import SwipeableRow from '../SwipeableRow'
-import MovementInfoModal, { InfoButton } from './MovementInfoModal'
+import MovementSteps, { InfoButton } from './MovementSteps'
 
 export default function NightStretches() {
   const today = dayjs().format('YYYY-MM-DD')
   const key = `stretch_pm_${today}`
   const [checked, setChecked] = useState(() => lsGet(key, {}))
-  const [info, setInfo] = useState(null)
+  const [openId, setOpenId] = useState(null)
 
   const toggle = (id) => {
     const next = { ...checked, [id]: !checked[id] }
@@ -39,27 +39,27 @@ export default function NightStretches() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {nightStretches.map((s) => {
           const isDone = !!checked[s.id]
+          const isOpen = openId === s.id
           return (
-            <SwipeableRow key={s.id} done={isDone} onComplete={() => toggle(s.id)}>
-              <div className={`list-row${isDone ? ' is-done' : ''}`}>
-                <span className="row-dot" style={{ background: 'var(--sky)' }} />
-                <div onClick={() => setInfo(s)} style={{ flex: 1, minWidth: 0, cursor: 'pointer' }}>
-                  <div style={{ fontWeight: 500, fontSize: 14, color: isDone ? 'var(--muted)' : 'var(--text)', textDecoration: isDone ? 'line-through' : 'none' }}>
-                    {s.name}
+            <div key={s.id}>
+              <SwipeableRow done={isDone} onComplete={() => toggle(s.id)}>
+                <div className={`list-row${isDone ? ' is-done' : ''}`}>
+                  <span className="row-dot" style={{ background: 'var(--sky)' }} />
+                  <div onClick={() => setOpenId(isOpen ? null : s.id)} style={{ flex: 1, minWidth: 0, cursor: 'pointer' }}>
+                    <div style={{ fontWeight: 500, fontSize: 14, color: isDone ? 'var(--muted)' : 'var(--text)', textDecoration: isDone ? 'line-through' : 'none' }}>
+                      {s.name}
+                    </div>
+                    <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>{s.prescription}</div>
                   </div>
-                  <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 2 }}>{s.prescription}</div>
+                  <InfoButton onClick={() => setOpenId(isOpen ? null : s.id)} color="var(--sky)" open={isOpen} />
+                  <input type="checkbox" className="checkbox" checked={isDone} onChange={() => toggle(s.id)} />
                 </div>
-                <InfoButton onClick={() => setInfo(s)} color="var(--sky)" />
-                <input type="checkbox" className="checkbox" checked={isDone} onChange={() => toggle(s.id)} />
-              </div>
-            </SwipeableRow>
+              </SwipeableRow>
+              {isOpen && <MovementSteps name={s.name} accent="var(--sky)" />}
+            </div>
           )
         })}
       </div>
-
-      {info && (
-        <MovementInfoModal name={info.name} prescription={info.prescription} accent="var(--sky)" onClose={() => setInfo(null)} />
-      )}
     </div>
   )
 }

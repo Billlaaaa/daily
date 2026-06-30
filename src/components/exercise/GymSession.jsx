@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { gymExercises, gymStretches, REHAB_EXERCISES } from '../../data/exercises'
 import { getLastSessionDate } from '../../hooks/useGymCycle'
 import { lsGet, lsSet } from '../../hooks/useLocalStorage'
-import MovementInfoModal, { InfoButton } from './MovementInfoModal'
+import MovementSteps, { InfoButton } from './MovementSteps'
 
 // Progressive overload nudge: if last session hit 10+ reps at a weight, suggest a small bump; otherwise repeat it.
 function suggestNextWeight(prevSet) {
@@ -15,11 +15,12 @@ function suggestNextWeight(prevSet) {
   return w
 }
 
-function ExerciseCard({ name, today, lastDate, isRehab, onInfo }) {
+function ExerciseCard({ name, today, lastDate, isRehab }) {
   const gymKey = `gym_${today}_${name}`
   const [sets, setSets] = useState(() =>
     lsGet(gymKey, [{ weight: '', reps: '', done: false }, { weight: '', reps: '', done: false }, { weight: '', reps: '', done: false }])
   )
+  const [showSteps, setShowSteps] = useState(false)
   const prevSets = lastDate ? lsGet(`gym_${lastDate}_${name}`, []) : []
 
   const updateSet = (idx, field, value) => {
@@ -47,8 +48,8 @@ function ExerciseCard({ name, today, lastDate, isRehab, onInfo }) {
       <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
         <div style={{ minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <div onClick={() => onInfo(name)} style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 15, color: 'var(--text)', cursor: 'pointer' }}>{name}</div>
-            <InfoButton onClick={() => onInfo(name)} color="var(--green)" />
+            <div onClick={() => setShowSteps(s => !s)} style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 15, color: 'var(--text)', cursor: 'pointer' }}>{name}</div>
+            <InfoButton onClick={() => setShowSteps(s => !s)} color="var(--green)" open={showSteps} />
           </div>
           {isRehab && (
             <div style={{ fontSize: 11, color: '#FF3333', fontWeight: 600, marginTop: 4, letterSpacing: '0.04em' }}>
@@ -61,7 +62,9 @@ function ExerciseCard({ name, today, lastDate, isRehab, onInfo }) {
         </span>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      {showSteps && <MovementSteps name={name} accent="var(--green)" />}
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 12 }}>
         {sets.map((set, idx) => (
           <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', opacity: set.done ? 0.6 : 1 }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--muted)', minWidth: 36 }}>
@@ -142,7 +145,7 @@ function CardioCard({ today }) {
 export default function GymSession({ split }) {
   const today = dayjs().format('YYYY-MM-DD')
   const [stretchOpen, setStretchOpen] = useState(false)
-  const [info, setInfo] = useState(null)
+  const [openStretch, setOpenStretch] = useState(null)
 
   const exercises = gymExercises[split] || []
   const stretches = gymStretches[split] || []
@@ -179,14 +182,20 @@ export default function GymSession({ split }) {
 
         {stretchOpen && (
           <div style={{ marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {stretches.map((s, i) => (
-              <div key={i} className="list-row" style={{ padding: '10px 14px' }}>
-                <span className="row-dot" style={{ background: 'var(--purple)' }} />
-                <span onClick={() => setInfo({ name: s.name, prescription: s.prescription, accent: 'var(--purple)' })} style={{ flex: 1, minWidth: 0, fontSize: 13, color: 'var(--text)', cursor: 'pointer' }}>{s.name}</span>
-                <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-mono)' }}>{s.prescription}</span>
-                <InfoButton onClick={() => setInfo({ name: s.name, prescription: s.prescription, accent: 'var(--purple)' })} color="var(--purple)" />
-              </div>
-            ))}
+            {stretches.map((s, i) => {
+              const isOpen = openStretch === i
+              return (
+                <div key={i}>
+                  <div className="list-row" style={{ padding: '10px 14px' }}>
+                    <span className="row-dot" style={{ background: 'var(--purple)' }} />
+                    <span onClick={() => setOpenStretch(isOpen ? null : i)} style={{ flex: 1, minWidth: 0, fontSize: 13, color: 'var(--text)', cursor: 'pointer' }}>{s.name}</span>
+                    <span style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-mono)' }}>{s.prescription}</span>
+                    <InfoButton onClick={() => setOpenStretch(isOpen ? null : i)} color="var(--purple)" open={isOpen} />
+                  </div>
+                  {isOpen && <MovementSteps name={s.name} accent="var(--purple)" />}
+                </div>
+              )
+            })}
           </div>
         )}
       </div>
@@ -200,7 +209,6 @@ export default function GymSession({ split }) {
             today={today}
             lastDate={lastDate}
             isRehab={REHAB_EXERCISES.includes(name)}
-            onInfo={(n) => setInfo({ name: n, accent: 'var(--green)' })}
           />
         ))}
       </div>
@@ -209,10 +217,6 @@ export default function GymSession({ split }) {
         <div style={{ marginTop: 12, fontSize: 12, color: 'var(--muted)', textAlign: 'right' }}>
           Previous session: {lastDate}
         </div>
-      )}
-
-      {info && (
-        <MovementInfoModal name={info.name} prescription={info.prescription} accent={info.accent} onClose={() => setInfo(null)} />
       )}
     </div>
   )
