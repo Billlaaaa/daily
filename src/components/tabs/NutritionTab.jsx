@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import dayjs from 'dayjs'
-import {
-  nutritionItems, supplementItems,
-  DAILY_PROTEIN_TARGET, DAILY_CARB_TARGET, DAILY_FAT_TARGET, DAILY_CALORIE_TARGET,
-} from '../../data/nutritionItems'
 import { lsGet, lsSet } from '../../hooks/useLocalStorage'
+import { getNutritionItems, getSupplementItems, getMacroTargets, getCalorieTarget } from '../../hooks/usePlanData'
+import { useCelebrateOnComplete } from '../../hooks/useCelebrateOnComplete'
 import SwipeableRow from '../SwipeableRow'
+import Confetti from '../Confetti'
 
 function MacroLine({ label, value, target, color }) {
   const pct = Math.min(100, (value / target) * 100)
@@ -31,6 +30,14 @@ export default function NutritionTab() {
   const nutKey = `nutrition_${today}`
   const supKey = `supplements_${today}`
 
+  const [nutritionItems] = useState(getNutritionItems)
+  const [supplementItems] = useState(getSupplementItems)
+  const [macroTargets] = useState(getMacroTargets)
+  const DAILY_PROTEIN_TARGET = macroTargets.protein
+  const DAILY_CARB_TARGET = macroTargets.carbs
+  const DAILY_FAT_TARGET = macroTargets.fat
+  const DAILY_CALORIE_TARGET = getCalorieTarget(macroTargets)
+
   const [nutChecked, setNutChecked] = useState(() => lsGet(nutKey, {}))
   const [supChecked, setSupChecked] = useState(() => lsGet(supKey, {}))
 
@@ -55,6 +62,7 @@ export default function NutritionTab() {
 
   const allNutDone = nutritionItems.every(i => nutChecked[i.id])
   const allSupDone = supplementItems.every(i => supChecked[i.id])
+  const [showConfetti, dismissConfetti] = useCelebrateOnComplete(allNutDone && allSupDone)
 
   const toggleAllNut = () => {
     const next = {}
@@ -72,6 +80,7 @@ export default function NutritionTab() {
 
   return (
     <div className="tab-content">
+      {showConfetti && <Confetti onDone={dismissConfetti} />}
       {/* Calorie + macro tracker */}
       <div className="card" style={{ borderLeft: '3px solid var(--accent)', marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14 }}>

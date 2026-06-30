@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import './styles/global.css'
 import { lsGet, lsSet } from './hooks/useLocalStorage'
 import { useAuth } from './context/AuthContext'
@@ -59,8 +59,26 @@ const SWIPE_THRESHOLD = 60
 // Keyed by user.sub — remounts fresh for each user so useState reads correct prefix
 function AuthenticatedApp() {
   const [setupDone, setSetupDone] = useState(() => !!lsGet('setupDone', false))
-  const [activeTab, setActiveTab] = useState('study')
+  const [activeTab, setActiveTab] = useState(() => {
+    const params = new URLSearchParams(window.location.search)
+    const tab = params.get('tab')
+    return TAB_ORDER.includes(tab) ? tab : 'study'
+  })
   const touchStart = useRef(null)
+
+  useEffect(() => {
+    if (window.location.search.includes('tab=')) {
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+    if (!('serviceWorker' in navigator)) return
+    const handleMessage = (event) => {
+      if (event.data?.type === 'navigate' && TAB_ORDER.includes(event.data.tab)) {
+        setActiveTab(event.data.tab)
+      }
+    }
+    navigator.serviceWorker.addEventListener('message', handleMessage)
+    return () => navigator.serviceWorker.removeEventListener('message', handleMessage)
+  }, [])
 
   const handleTouchStart = (e) => {
     const t = e.touches[0]

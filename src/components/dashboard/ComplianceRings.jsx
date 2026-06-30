@@ -1,6 +1,6 @@
 import dayjs from 'dayjs'
 import { lsGet } from '../../hooks/useLocalStorage'
-import { nutritionItems, supplementItems } from '../../data/nutritionItems'
+import { getNutritionItems, getSupplementItems } from '../../hooks/usePlanData'
 
 const PLAN_START = '2026-07-01'
 const TOTAL_DAYS = 50
@@ -35,6 +35,8 @@ function Ring({ pct, label, color }) {
 
 export default function ComplianceRings() {
   const today = dayjs().format('YYYY-MM-DD')
+  const nutritionItems = getNutritionItems()
+  const supplementItems = getSupplementItems()
   let nutFullDays = 0
   let supFullDays = 0
   let totalDays = 0

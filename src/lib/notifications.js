@@ -1,51 +1,53 @@
 import dayjs from 'dayjs'
-import { studyBlocks } from '../data/studyBlocks'
-import { nutritionItems, supplementItems } from '../data/nutritionItems'
+import { getStudyBlocks, getNutritionItems, getSupplementItems } from '../hooks/usePlanData'
 
 function buildTodayEvents() {
   const today = dayjs().format('YYYY-MM-DD')
   const events = []
 
-  studyBlocks.forEach((b) => {
+  getStudyBlocks().forEach((b) => {
     events.push({
       time: dayjs(`${today} ${b.time}`, 'YYYY-MM-DD h:mm A'),
       title: `${b.label} starting`,
       body: 'Time to start your study block.',
+      tab: 'study',
     })
   })
 
-  nutritionItems.forEach((item) => {
+  getNutritionItems().forEach((item) => {
     events.push({
       time: dayjs(`${today} ${item.time}`, 'YYYY-MM-DD h:mm A'),
       title: 'Meal time',
       body: item.label,
+      tab: 'nutrition',
     })
   })
 
-  supplementItems.forEach((item) => {
+  getSupplementItems().forEach((item) => {
     events.push({
       time: dayjs(`${today} ${item.time}`, 'YYYY-MM-DD h:mm A'),
       title: 'Supplement reminder',
       body: item.label,
+      tab: 'nutrition',
     })
   })
 
   return events
 }
 
-async function fireNotification(title, body) {
+async function fireNotification(title, body, tab) {
   if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return
   try {
     if ('serviceWorker' in navigator) {
       const reg = await navigator.serviceWorker.ready
-      reg.showNotification(title, { body, icon: '/icon-192.png', badge: '/icon-192.png', tag: title })
+      reg.showNotification(title, { body, icon: '/icon-192.png', badge: '/icon-192.png', tag: title, data: { tab } })
       return
     }
   } catch {
     // fall through to direct Notification below
   }
   try {
-    new Notification(title, { body, icon: '/icon-192.png' })
+    new Notification(title, { body, icon: '/icon-192.png', data: { tab } })
   } catch {
     // some platforms (older Android Chrome) disallow the direct constructor — nothing more we can do
   }
@@ -71,7 +73,7 @@ export function scheduleTodayNotifications() {
   buildTodayEvents().forEach((ev) => {
     const delay = ev.time.diff(now)
     if (delay <= 0 || delay > 24 * 60 * 60 * 1000) return
-    scheduledTimeouts.push(setTimeout(() => fireNotification(ev.title, ev.body), delay))
+    scheduledTimeouts.push(setTimeout(() => fireNotification(ev.title, ev.body, ev.tab), delay))
   })
 }
 

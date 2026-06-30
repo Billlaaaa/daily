@@ -1,13 +1,16 @@
 import { useState } from 'react'
 import dayjs from 'dayjs'
-import { studyBlocks } from '../../data/studyBlocks'
 import { lsGet, lsSet } from '../../hooks/useLocalStorage'
+import { getStudyBlocks } from '../../hooks/usePlanData'
+import { useCelebrateOnComplete } from '../../hooks/useCelebrateOnComplete'
 import FullScreenTimer from '../timer/FullScreenTimer'
+import Confetti from '../Confetti'
 
 export default function StudyTab() {
   const today = dayjs().format('YYYY-MM-DD')
   const storageKey = `study_${today}`
 
+  const [studyBlocks] = useState(getStudyBlocks)
   const [checked, setChecked] = useState(() => lsGet(storageKey, {}))
   // Resume an in-progress timer if the page was refreshed mid-session
   const [activeBlock, setActiveBlock] = useState(() => {
@@ -35,6 +38,8 @@ export default function StudyTab() {
 
   const completedCount = studyBlocks.filter(b => checked[b.id]).length
   const hoursStudied = (completedCount * 50 / 60).toFixed(1)
+  const allDone = studyBlocks.length > 0 && completedCount === studyBlocks.length
+  const [showConfetti, dismissConfetti] = useCelebrateOnComplete(allDone)
 
   if (activeBlock) {
     return (
@@ -48,6 +53,7 @@ export default function StudyTab() {
 
   return (
     <div className="tab-content">
+      {showConfetti && <Confetti onDone={dismissConfetti} />}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12, marginBottom: 24 }}>
         {studyBlocks.map((block) => {
           const done = !!checked[block.id]

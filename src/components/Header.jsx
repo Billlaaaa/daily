@@ -4,6 +4,8 @@ import { useClock } from '../hooks/useClock'
 import { useGymCycle } from '../hooks/useGymCycle'
 import { useAuth } from '../context/AuthContext'
 import NotificationToggle from './NotificationToggle'
+import OfflineBadge from './OfflineBadge'
+import SettingsButton from './SettingsButton'
 
 const EXAM_DATE = '2026-08-20'
 const PLAN_START_DATE = '2026-07-01'
@@ -69,6 +71,8 @@ export default function Header() {
           MISSION CONTROL
         </span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <OfflineBadge />
+          <SettingsButton />
           <NotificationToggle />
           <UserBadge />
         </div>

@@ -1,19 +1,27 @@
 import dayjs from 'dayjs'
 import { lsGet } from './useLocalStorage'
-import { studyBlocks } from '../data/studyBlocks'
-import { dailyItems } from '../data/dailyItems'
-import { nutritionItems } from '../data/nutritionItems'
+import { getStudyBlocks, getDailyItems, getNutritionItems } from './usePlanData'
 
 export function isDayComplete(dateStr) {
   const study = lsGet(`study_${dateStr}`, {})
   const daily = lsGet(`daily_${dateStr}`, {})
   const nutrition = lsGet(`nutrition_${dateStr}`, {})
 
-  const allStudy = studyBlocks.every(b => study[b.id])
-  const allDaily = dailyItems.every(i => daily[i.id])
-  const allNutrition = nutritionItems.every(i => nutrition[i.id])
+  const allStudy = getStudyBlocks().every(b => study[b.id])
+  const allDaily = getDailyItems().every(i => daily[i.id])
+  const allNutrition = getNutritionItems().every(i => nutrition[i.id])
 
   return allStudy && allDaily && allNutrition
+}
+
+export function getDayCompletionFraction(dateStr) {
+  const study = lsGet(`study_${dateStr}`, {})
+  const daily = lsGet(`daily_${dateStr}`, {})
+  const nutrition = lsGet(`nutrition_${dateStr}`, {})
+
+  const items = [...getStudyBlocks().map(b => !!study[b.id]), ...getDailyItems().map(i => !!daily[i.id]), ...getNutritionItems().map(i => !!nutrition[i.id])]
+  if (items.length === 0) return 0
+  return items.filter(Boolean).length / items.length
 }
 
 export function useStreak(planStartDate, totalDays, today) {

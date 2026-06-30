@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { lsGet } from '../../hooks/useLocalStorage'
-import { studyBlocks } from '../../data/studyBlocks'
+import { getStudyBlocks } from '../../hooks/usePlanData'
 
 const PLAN_START = '2026-07-01'
 const TOTAL_DAYS = 50
@@ -9,6 +9,7 @@ const BLOCK_HOURS = 50 / 60
 
 export default function StudyChart() {
   const today = dayjs().format('YYYY-MM-DD')
+  const studyBlocks = getStudyBlocks()
   const data = []
   let totalHours = 0
   let bestDay = 0

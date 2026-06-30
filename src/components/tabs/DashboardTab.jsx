@@ -1,11 +1,12 @@
 import dayjs from 'dayjs'
 import { lsGet } from '../../hooks/useLocalStorage'
-import { studyBlocks } from '../../data/studyBlocks'
+import { getStudyBlocks } from '../../hooks/usePlanData'
 import WeightChart from '../dashboard/WeightChart'
 import StudyChart from '../dashboard/StudyChart'
 import ExerciseChart from '../dashboard/ExerciseChart'
 import ComplianceRings from '../dashboard/ComplianceRings'
 import StreakTracker from '../dashboard/StreakTracker'
+import TodaySummaryCard from '../dashboard/TodaySummaryCard'
 
 const PLAN_START = '2026-07-01'
 const TOTAL_DAYS = 50
@@ -19,6 +20,7 @@ export default function DashboardTab() {
   const currentWeight = lsGet(`weight_${today}`, null)
 
   // Total study hours across all days
+  const studyBlocks = getStudyBlocks()
   let totalHours = 0
   for (let i = 0; i < TOTAL_DAYS; i++) {
     const d = dayjs(PLAN_START).add(i, 'day').format('YYYY-MM-DD')
@@ -36,6 +38,8 @@ export default function DashboardTab() {
 
   return (
     <div className="tab-content">
+      <TodaySummaryCard />
+
       {/* Header stat row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, marginBottom: 24 }}>
         {metrics.map(m => (

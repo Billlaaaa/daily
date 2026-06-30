@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { GYM_CYCLE, CYCLE_START_DATE } from '../data/exercises'
+import { GYM_CYCLE, CYCLE_START_DATE, gymExercises } from '../data/exercises'
 import { lsGet } from './useLocalStorage'
 
 export function getGymSession(date) {
@@ -10,6 +10,24 @@ export function getGymSession(date) {
 
 export function useGymCycle(date) {
   return getGymSession(date)
+}
+
+export function getGymCompletion(date) {
+  const split = getGymSession(date)
+  if (split === 'Rest') return { split, pct: 100 }
+  if (split === 'Cardio') {
+    const done = !!lsGet(`gym_${date}_cardio`, false)
+    return { split, pct: done ? 100 : 0 }
+  }
+  const exercises = gymExercises[split] || []
+  let totalSets = 0
+  let doneSets = 0
+  exercises.forEach((name) => {
+    const sets = lsGet(`gym_${date}_${name}`, [{ done: false }, { done: false }, { done: false }])
+    totalSets += sets.length
+    doneSets += sets.filter((s) => s.done).length
+  })
+  return { split, pct: totalSets > 0 ? (doneSets / totalSets) * 100 : 0 }
 }
 
 export function getLastSessionDate(split, beforeDate) {

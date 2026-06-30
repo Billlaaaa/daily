@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { lsGet, lsSet, lsDel } from '../../hooks/useLocalStorage'
 import { BLOCK_DURATION_MS } from '../../data/studyBlocks'
+import { playCompletionChime } from '../../lib/chime'
 
 const RADIUS = 120
 const CX = 140
@@ -43,6 +44,7 @@ export default function FullScreenTimer({ block, onComplete, onExit }) {
       setRemaining(0)
       clearInterval(intervalRef.current)
       lsDel('activeTimer')
+      playCompletionChime()
       setTimeout(() => onCompleteRef.current(block.id), 300)
     } else {
       setRemaining(rem)

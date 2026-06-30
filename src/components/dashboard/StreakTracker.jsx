@@ -1,5 +1,6 @@
 import dayjs from 'dayjs'
 import { useStreak } from '../../hooks/useStreak'
+import StreakHeatmap from './StreakHeatmap'
 
 const PLAN_START = '2026-07-01'
 const TOTAL_DAYS = 50
@@ -26,6 +27,7 @@ export default function StreakTracker() {
           <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 6 }}>Longest streak</div>
         </div>
       </div>
+      <StreakHeatmap planStartDate={PLAN_START} totalDays={TOTAL_DAYS} today={today} />
     </div>
   )
 }

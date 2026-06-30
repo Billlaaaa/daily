@@ -39,3 +39,22 @@ self.addEventListener('fetch', (event) => {
     })
   )
 })
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close()
+  const tab = event.notification.data?.tab
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if ('focus' in client) {
+          client.focus()
+          if (tab) client.postMessage({ type: 'navigate', tab })
+          return
+        }
+      }
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(tab ? `/?tab=${tab}` : '/')
+      }
+    })
+  )
+})

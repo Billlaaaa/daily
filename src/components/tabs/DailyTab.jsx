@@ -1,13 +1,17 @@
 import { useState } from 'react'
 import dayjs from 'dayjs'
-import { dailyItems, categoryColors } from '../../data/dailyItems'
+import { categoryColors } from '../../data/dailyItems'
 import { lsGet, lsSet } from '../../hooks/useLocalStorage'
+import { getDailyItems } from '../../hooks/usePlanData'
+import { useCelebrateOnComplete } from '../../hooks/useCelebrateOnComplete'
 import SwipeableRow from '../SwipeableRow'
+import Confetti from '../Confetti'
 
 export default function DailyTab() {
   const today = dayjs().format('YYYY-MM-DD')
   const storageKey = `daily_${today}`
 
+  const [dailyItems] = useState(getDailyItems)
   const [checked, setChecked] = useState(() => lsGet(storageKey, {}))
 
   const toggle = (id) => {
@@ -18,6 +22,7 @@ export default function DailyTab() {
 
   const completedCount = dailyItems.filter(i => checked[i.id]).length
   const allDone = completedCount === dailyItems.length
+  const [showConfetti, dismissConfetti] = useCelebrateOnComplete(allDone)
 
   const toggleAll = () => {
     const next = {}
@@ -28,6 +33,7 @@ export default function DailyTab() {
 
   return (
     <div className="tab-content">
+      {showConfetti && <Confetti onDone={dismissConfetti} />}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
         <h2 style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 18, color: 'var(--text)' }}>
           Daily Routine
