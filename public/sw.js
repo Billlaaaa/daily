@@ -1,5 +1,5 @@
 const CACHE_NAME = 'mission-control-v1'
-// Resolve against the SW's own scope so it works under any base path (e.g. /Daily/)
+// Resolve against the SW's own scope so it works under any base path (e.g. /daily/)
 const APP_SHELL = new URL('index.html', self.registration.scope).href
 
 self.addEventListener('install', (event) => {
