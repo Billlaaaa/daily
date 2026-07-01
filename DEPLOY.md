@@ -1,86 +1,55 @@
-# Deploying to snake-master.com/daily
+# Deploying to daily.snake-master.com
 
-This app is a static Vite build deployed to **GitHub Pages** as a project site.
-Because the custom domain `snake-master.com` is configured on your GitHub Pages
-**user site**, any project repo you publish is served at `snake-master.com/<repo-name>/`.
-
-The build is configured for the path **`/daily/`**, so the repo **must be named `daily`** (lowercase).
+This app is a static Vite build hosted on **GitHub Pages** from the `daily` repo,
+served at the subdomain **https://daily.snake-master.com/** (root of the subdomain,
+so Vite `base` is `/`). A `public/CNAME` file pins the custom domain.
 
 ---
 
 ## One-time setup
 
-### 1. Create the repo
-On GitHub, create a new repository:
-- Name: **`daily`** (exactly, lowercase)
-- Visibility: **Public**
-- Do **not** add a README, .gitignore, or license (keep it empty)
-
-Create it under the same account/org that owns your `snake-master.com` Pages site.
-
-### 2. Push this project
-From the project folder (`C:\Users\yuvam\cfa-tracker`):
-
+### 1. Push the code
 ```bash
-git remote add origin https://github.com/<your-username>/daily.git
+git remote add origin https://github.com/Billlaaaa/daily.git   # if not already set
 git push -u origin main
 ```
 
-If git asks you to sign in, use your GitHub account (or a Personal Access Token).
-
-### 3. Add the Google client ID as a secret
-The client ID is read at build time from a repository secret (your local `.env.local`
-is never pushed).
-
+### 2. Add the Google client ID secret
 Repo → **Settings → Secrets and variables → Actions → New repository secret**
 - Name: `VITE_GOOGLE_CLIENT_ID`
-- Value: copy the value after `VITE_GOOGLE_CLIENT_ID=` in your local `.env.local`
+- Value: the value after `VITE_GOOGLE_CLIENT_ID=` in local `.env.local`
 
-### 4. Enable Pages
+### 3. Enable Pages
 Repo → **Settings → Pages → Build and deployment → Source: `GitHub Actions`**
 
-Do **not** set a custom domain on this repo — it inherits `snake-master.com`
-from your user site.
+### 4. Point the subdomain at GitHub (DNS)
+At the registrar/DNS host for `snake-master.com`, add one record:
+- Type: **CNAME**
+- Name/Host: **daily**
+- Value/Target: **billlaaaa.github.io**
 
-### 5. Authorize the domain for Google sign-in
+### 5. Set the custom domain on the repo
+Repo → **Settings → Pages → Custom domain** → `daily.snake-master.com` → **Save**.
+Wait for the green "DNS check successful", then tick **Enforce HTTPS**.
+
+### 6. Authorize the domain for Google sign-in
 [Google Cloud Console → Credentials](https://console.cloud.google.com/apis/credentials)
-→ your OAuth 2.0 Client ID → **Authorized JavaScript origins** → add:
-- `https://snake-master.com`
-- (keep `http://localhost:5173` for local dev)
+→ your OAuth client → **Authorized JavaScript origins** → add
+`https://daily.snake-master.com` (keep `http://localhost:5173` for local dev).
 
-HTTPS is required for both Google sign-in and the service worker — GitHub Pages
-provides this automatically on the custom domain.
+Live at: **https://daily.snake-master.com/**
 
 ---
 
-## Deploying (now and every update)
-
-Just push to `main`:
-
+## Updating later
 ```bash
 git add -A
-git commit -m "your message"
+git commit -m "what changed"
 git push
 ```
+The **Deploy to GitHub Pages** workflow rebuilds and republishes automatically.
 
-The **Deploy to GitHub Pages** workflow (`.github/workflows/deploy.yml`) runs
-automatically: it installs deps, builds with base `/daily/`, adds a `404.html`
-SPA fallback and `.nojekyll`, and publishes. Watch progress in the repo's
-**Actions** tab. First deploy takes ~1-2 minutes.
-
-Live at: **https://snake-master.com/daily/**
-
----
-
-## Notes / troubleshooting
-
-- **Repo name = URL path, case-sensitive.** `daily` → `/daily/`. If you ever
-  rename it, change `base` in `vite.config.js` to match.
-- **Blank page / 404 on assets** usually means the `base` and repo name don't
-  match, or Pages source isn't set to "GitHub Actions".
-- **Sign-in button does nothing** on the live site → the domain isn't in the
-  Google OAuth "Authorized JavaScript origins" (step 5), or the
-  `VITE_GOOGLE_CLIENT_ID` secret is missing (step 3).
-- **Local development** is unaffected: `npm run dev` still serves from `/`.
-- Each user's data is stored per-Google-account in that browser's localStorage.
-  Use the in-app **Settings → Backup** to export/import.
+## Notes
+- Subdomain serves at root, so `base` is `/`. Don't reintroduce a `/daily/` base.
+- Local dev is unaffected: `npm run dev` runs at `/`.
+- DNS/cert can take a few minutes to an hour to go green the first time.
