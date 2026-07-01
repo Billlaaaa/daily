@@ -1,5 +1,6 @@
 const CACHE_NAME = 'mission-control-v1'
-const APP_SHELL = '/index.html'
+// Resolve against the SW's own scope so it works under any base path (e.g. /Daily/)
+const APP_SHELL = new URL('index.html', self.registration.scope).href
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -53,7 +54,8 @@ self.addEventListener('notificationclick', (event) => {
         }
       }
       if (self.clients.openWindow) {
-        return self.clients.openWindow(tab ? `/?tab=${tab}` : '/')
+        const base = self.registration.scope
+        return self.clients.openWindow(tab ? `${base}?tab=${tab}` : base)
       }
     })
   )

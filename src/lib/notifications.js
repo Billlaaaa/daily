@@ -1,6 +1,8 @@
 import dayjs from 'dayjs'
 import { getStudyBlocks, getNutritionItems, getSupplementItems } from '../hooks/usePlanData'
 
+const ICON = import.meta.env.BASE_URL + 'icon-192.png'
+
 function buildTodayEvents() {
   const today = dayjs().format('YYYY-MM-DD')
   const events = []
@@ -40,14 +42,14 @@ async function fireNotification(title, body, tab) {
   try {
     if ('serviceWorker' in navigator) {
       const reg = await navigator.serviceWorker.ready
-      reg.showNotification(title, { body, icon: '/icon-192.png', badge: '/icon-192.png', tag: title, data: { tab } })
+      reg.showNotification(title, { body, icon: ICON, badge: ICON, tag: title, data: { tab } })
       return
     }
   } catch {
     // fall through to direct Notification below
   }
   try {
-    new Notification(title, { body, icon: '/icon-192.png', data: { tab } })
+    new Notification(title, { body, icon: ICON, data: { tab } })
   } catch {
     // some platforms (older Android Chrome) disallow the direct constructor — nothing more we can do
   }
